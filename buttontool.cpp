@@ -21,7 +21,7 @@ ButtonTool::~ButtonTool()
 
 }
 
-void ButtonTool::InitUi()
+void ButtonTool::InitUi() //初始化界面
 {
     m_pRootLayout = new QVBoxLayout(this);
     m_pRootLayout->setContentsMargins(0,0,0,0);
@@ -34,14 +34,14 @@ void ButtonTool::InitUi()
     m_pRootLayout->addWidget(m_pRootWidget);
 }
 
-void ButtonTool::InitProperty()
+void ButtonTool::InitProperty() //初始化按钮属性
 {
     setWindowFlags(Qt::FramelessWindowHint);//无边框
     setAttribute(Qt::WA_TranslucentBackground);//背景透明
     //获取程序当前运行目录
     //QString path = QCoreApplication::applicationDirPath();
 
-    QFile resourceqss(":/ImageTools/qss/ButtonTool.qss");//该路径要改
+    QFile resourceqss(":/ImageTools/qss/ButtonTool.qss");
     resourceqss.open(QFile::ReadOnly);
     this->setStyleSheet(resourceqss.readAll());
     resourceqss.close();
@@ -49,7 +49,7 @@ void ButtonTool::InitProperty()
     m_qButtons.clear();
 }
 
-void ButtonTool::SetCutToolTip()
+void ButtonTool::SetCutToolTip()//设置裁剪部件提示
 {
     for(auto temp : m_qButtons)
     {
@@ -60,7 +60,7 @@ void ButtonTool::SetCutToolTip()
     }
 }
 
-void ButtonTool::SetSaveToolTip()
+void ButtonTool::SetSaveToolTip()//设置保存部件提示
 {
     for(auto temp : m_qButtons)
     {
@@ -71,7 +71,7 @@ void ButtonTool::SetSaveToolTip()
     }
 }
 
-void ButtonTool::SetCloseToolTip()
+void ButtonTool::SetCloseToolTip()//设置关闭部件提示
 {
     for(auto temp : m_qButtons)
     {
@@ -82,17 +82,18 @@ void ButtonTool::SetCloseToolTip()
     }
 }
 
-void ButtonTool::InitButtons(QStringList buttons)
+void ButtonTool::InitButtons(QStringList buttons)//初始化按钮部件
 {
     m_qButtonList = buttons;
     for(auto button : m_qButtonList)
     {
         QPushButton *m_pButton = new QPushButton(m_pRootWidget);
         m_pButton->setObjectName(button);
-
+        /*button.replace("Button", "");
+        m_pButton->setToolTip(tr(button.toUtf8().data()));*/
         connect(m_pButton, &QPushButton::clicked, this, [=](){
             QPushButton* button = qobject_cast<QPushButton*>(sender());
-            if(button->objectName() == "CutButton")
+            if(button->objectName() == "CutButton") //根据按钮转换到各自信号
             {
                 emit clicked(STATE::CUT);
             } else if(button->objectName() == "LampButton")
@@ -116,11 +117,11 @@ void ButtonTool::InitButtons(QStringList buttons)
 
 }
 
-void ButtonTool::SetLampToolTip(bool lamp)
+void ButtonTool::SetLampToolTip(bool lamp) //灯光部件提示
 {
     for(auto temp : m_qButtons)
     {
-        if(temp->objectName() == "LampButton")
+        if(temp->objectName() == "LampButton")//根据按钮状态修改提示内容
         {
             if(lamp)
             {
