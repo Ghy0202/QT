@@ -16,19 +16,19 @@ public:
     ~ButtonTool();
 
 public:
-    enum STATE {CUT, LAMP, SAVE, CLOSE};
+    enum STATE {CUT, LAMP, SAVE, CLOSE};//枚举
 
-    void InitButtons(QStringList buttons = {"CutButton", "LampButton", "SaveButton", "CloseButton"});
+    void InitButtons(QStringList buttons = {"CutButton", "LampButton", "SaveButton", "CloseButton"});//按钮
 
-    void SetLampToolTip(bool lamp);
+    void SetLampToolTip(bool lamp);//灯光提示
 
 private:
-    void InitUi( void );
-    void InitProperty( void );
+    void InitUi( void );//初始界面
+    void InitProperty( void );//初始属性
 
-    void SetCutToolTip();
-    void SetSaveToolTip();
-    void SetCloseToolTip();
+    void SetCutToolTip();//裁剪部件提示
+    void SetSaveToolTip();//保存部件提示
+    void SetCloseToolTip();//关闭部件提示
 
 protected:
 
