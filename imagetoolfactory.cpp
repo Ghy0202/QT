@@ -16,6 +16,8 @@ ImageToolFactory::~ImageToolFactory()
 
 ImageToolBase *ImageToolFactory::NewTool(ImageToolFactory::TOOLS tool)
 {
+
+    //判断是哪一个按钮：跳转到对应的widget界面
     switch (tool) {
         case TOOLS::SCREENSHOT: {
             return new ScreenShot(m_pParent);
