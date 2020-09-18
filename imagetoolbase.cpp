@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QDebug>
 
-ImageToolBase::ImageToolBase(QWidget *parent)
+ImageToolBase::ImageToolBase(QWidget *parent)//初始化各组件属性
     : QWidget(parent)
     , m_qMovePos(QPoint(-1, -1))
     , m_pScreen(nullptr)
@@ -16,9 +16,9 @@ ImageToolBase::ImageToolBase(QWidget *parent)
     , m_pParent(parent)
 {
     this->setWindowFlags(Qt::FramelessWindowHint);
-    setAutoFillBackground(true);
-    QPalette pal = palette();
-    pal.setColor(QPalette::Background,Qt::transparent);
+    setAutoFillBackground(true);//自动填充背景
+    QPalette pal = palette();//颜色组
+    pal.setColor(QPalette::Background,Qt::transparent);//背景颜色透明
     setPalette(pal);
     setWindowOpacity(1);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -31,18 +31,18 @@ ImageToolBase::~ImageToolBase()
 
 }
 
-void ImageToolBase::SetLightState(QString state)
+void ImageToolBase::SetLightState(QString state)//设置灯光范围
 {
     this->setProperty("State", state);
     this->setStyle(QApplication::style());
 }
 
-void ImageToolBase::SetMaskLayerColor(QColor color)
+void ImageToolBase::SetMaskLayerColor(QColor color)//设置遮罩层颜色
 {
     MaskLayerColor = color;
 }
 
-QColor ImageToolBase::GetMaskLayerColor() const
+QColor ImageToolBase::GetMaskLayerColor() const//获取遮罩层颜色
 {
     return MaskLayerColor;
 }
