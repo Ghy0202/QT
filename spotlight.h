@@ -11,10 +11,14 @@ public:
 
 public:
 
+
+    //所有override都在重构ImageToolBase里的函数
 private:
+
     void InitUi() override;
     void InitProperty() override;
 
+    //缩放范围是否在主窗口内
     bool ZoomIsInArea(QPoint pos);
 
 protected:
