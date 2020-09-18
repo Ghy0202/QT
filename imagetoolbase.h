@@ -16,7 +16,7 @@ public:
     explicit ImageToolBase(QWidget *parent = nullptr);
     ~ImageToolBase();
 
-    void SetLightState(QString state);
+    void SetLightState(QString state); //灯光范围
 
     QColor GetMaskLayerColor( void ) const;
 
@@ -39,7 +39,7 @@ protected:
     QPixmap *m_pBackgroundScreen; // 遮罩层
     QPoint m_qMovePos; // 坐标缓存
     bool m_bLight; // 灯 - 遮罩背景
-    bool m_bCut; // 切换 - 放大镜或聚光灯 区域 矩形(false), 圆形(true)
+    bool m_bCut; // 切换 - 放大镜或聚光灯使用 区域：矩形(false), 圆形(true)
     bool m_bInit; // 初始化成功标志
     QColor MaskLayerColor;
 };
