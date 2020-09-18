@@ -28,20 +28,22 @@ SpotLight::~SpotLight()
 
 void SpotLight::InitUi()
 {
-    showFullScreen();
+    showFullScreen();//Widget自带的函数，即全屏显示窗口
 
-    m_pZoom = new QWidget(this);
-    m_pZoom->setObjectName("Zoom");
+    m_pZoom = new QWidget(this);//新建一个控件
+    m_pZoom->setObjectName("Zoom");//给控件命名
 
-    m_pButtonTool = new ButtonTool(this);
-    m_pButtonTool->InitButtons({"CutButton", "LampButton", "CloseButton"});
-    m_pButtonTool->setVisible(false);
+    m_pButtonTool = new ButtonTool(this);//新建按钮组
+    m_pButtonTool->InitButtons({"CutButton", "LampButton", "CloseButton"});//设置按钮组件为切换、灯光、关闭
+    m_pButtonTool->setVisible(false);//设置控件为不可见
 
 }
 
 void SpotLight::InitProperty()
 {
-    this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::FramelessWindowHint);//setWindowFlags自带功能：将窗口的最小化、最大化与关闭统统隐藏
+
+    //设置背景透明
     setAutoFillBackground(true);
     QPalette pal = palette();
     pal.setColor(QPalette::Background,Qt::transparent);
@@ -52,27 +54,25 @@ void SpotLight::InitProperty()
     //添加自定义类控制
     setAttribute(Qt::WA_StyledBackground,true);
 
-    //获取程序当前运行目录
-    //QString path = QCoreApplication::applicationDirPath();
-
-    QFile resourceqss(":/ImageTools/qss/ImageToolBase.qss");//该路径要改~~~~~~~~~~~~
+    //用自定义的.qss文件对桌面进行美化->设置出自己想要的样子（zoom图标）
+    QFile resourceqss(":/ImageTools/qss/ImageToolBase.qss");
     resourceqss.open(QFile::ReadOnly);
     this->setStyleSheet(resourceqss.readAll());
     resourceqss.close();
 
+    //初始化灯光的状态：关
     m_bLight = false;
     SetLightState("ColseLight");
     m_pButtonTool->SetLampToolTip(m_bLight);
 
-
-    connect(m_pButtonTool, &ButtonTool::clicked, this, [=](ButtonTool::STATE state){
+    connect(m_pButtonTool, &ButtonTool::clicked, this, [=](ButtonTool::STATE state){//按钮组件槽函数
         switch (state) {
-            case ButtonTool::STATE::CUT: {
+            case ButtonTool::STATE::CUT: {//切换
                 m_bCut = !m_bCut;
                 update();
                 break;
             }
-            case ButtonTool::STATE::LAMP: {
+            case ButtonTool::STATE::LAMP: {//灯光
                 m_bLight = !m_bLight;
                 if(m_bLight)
                 {
@@ -87,7 +87,7 @@ void SpotLight::InitProperty()
 
                 break;
             }
-            case ButtonTool::STATE::CLOSE: {
+            case ButtonTool::STATE::CLOSE: {//关闭
                 emit clicked(STATE::CLOSE);
                 this->close();
                 break;
@@ -95,7 +95,7 @@ void SpotLight::InitProperty()
         }
     });
 
-    // 初始化 处理屏幕的对象 并初始化 可活动范围
+    // 初始化 处理屏幕的对象 并初始化 可活动范围（最大尺寸为桌面尺寸，最大宽度为桌面宽度，最大高度为桌面高度）
     m_pScreen = new ProcessObject;
     m_pScreen->SetMaxParentSize(QApplication::desktop()->size());
     m_pScreen->SetMaxWidth(QApplication::desktop()->size().width());
@@ -107,6 +107,7 @@ void SpotLight::InitProperty()
 
 }
 
+//缩放判断是否在指定区域
 bool SpotLight::ZoomIsInArea(QPoint pos)
 {
     if(pos.x() > m_pZoom->x()
@@ -116,24 +117,26 @@ bool SpotLight::ZoomIsInArea(QPoint pos)
     {
         return true;
     }
+    else{
     return false;
+    }
 }
 
 // 按下事件
 void SpotLight::mousePressEvent(QMouseEvent *event)
 {
-    if(this->ZoomIsInArea(event->pos()))
+    if(this->ZoomIsInArea(event->pos()))//鼠标在缩放按钮上
     {
         m_pScreen->SetState(ProcessObject::STATE::ZOOM);
-        m_pButtonTool->setVisible(false);
-        this->setCursor(Qt::SizeFDiagCursor);
+        m_pButtonTool->setVisible(false);//按钮组此时不可见
+        this->setCursor(Qt::CrossCursor);//设置光标的图案（这里当鼠标放在缩放按钮时：十字架光标）
     }
-    else if(m_pScreen->IsInArea(event->pos()))
+    else if(m_pScreen->IsInArea(event->pos()))//鼠标在聚光灯窗口里
     {
         m_pScreen->SetState(ProcessObject::STATE::MOVE);
-        m_pZoom->setVisible(false);
-        m_pButtonTool->setVisible(false);
-        this->setCursor(Qt::SizeAllCursor);
+        m_pZoom->setVisible(false);//缩放按钮此时不可见
+        m_pButtonTool->setVisible(false);//按钮组此时不可见
+        this->setCursor(Qt::ClosedHandCursor);//设置光标图案（握紧的小拳头）
     }
 
     m_qMovePos = event->pos();
@@ -217,14 +220,13 @@ void SpotLight::paintEvent(QPaintEvent *event)
             int x1 = static_cast<int>(double(circle_centerx) + double(r) * qCos(45.0));
             int y1 = static_cast<int>(double(circle_centery) + double(r) * qSin(45.0));
             m_pZoom->move(x1-m_pZoom->width()/2, y1-m_pZoom->height()/2);
-            //m_pZoom->show();
-
+            
         } else {
             painter.drawPixmap(x, y, m_pFullScreen->copy(x, y, w, h));
             painter.drawRect(x, y, w, h);
 
             m_pZoom->move(x+w-m_pZoom->width()/2, y+h-m_pZoom->height()/2);
-            //m_pZoom->show();
+            
 
         }
         // 动态变更按钮组位置
@@ -255,7 +257,7 @@ void SpotLight::showEvent(QShowEvent *event)
         m_pScreen->SetStart(QPoint(x,y));
         m_pScreen->SetGeometry(x, y, wide, wide);
 
-        // QT5.6 获取主屏幕大小 - 全屏大小
+        // 获取主屏幕大小 - 全屏大小
         QScreen *screen = QApplication::primaryScreen();
         *m_pFullScreen = screen->grabWindow(
                                            QApplication::desktop()->winId(),
