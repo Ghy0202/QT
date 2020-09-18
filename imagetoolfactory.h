@@ -13,8 +13,9 @@ public:
     ~ImageToolFactory();
 
 public:
-    enum TOOLS {SCREENSHOT, MAGNIFYINGGLASS, SPOTLIGHT};
-    ImageToolBase* NewTool(TOOLS);
+    enum TOOLS {SCREENSHOT, MAGNIFYINGGLASS, SPOTLIGHT};//定义“截图”，“放大镜”和“聚光灯”三种功能
+
+    ImageToolBase* NewTool(TOOLS);//?
 
 private:
     QWidget *m_pParent;
