@@ -26,21 +26,21 @@ MagnifyingGlass::~MagnifyingGlass()
 
 }
 
-void MagnifyingGlass::InitUi()
+void MagnifyingGlass::InitUi()//设置放大镜界面
 {
-    showFullScreen();
+    showFullScreen();//显示全屏
 
     m_pZoom = new QWidget(this);
-    m_pZoom->setObjectName("Zoom");
+    m_pZoom->setObjectName("Zoom");//缩放
 
     m_pButtonTool = new ButtonTool(this);
-    m_pButtonTool->InitButtons({"CutButton", "LampButton", "CloseButton"});
+    m_pButtonTool->InitButtons({"CutButton", "LampButton", "CloseButton"});//选取所需按钮
     m_pButtonTool->setVisible(false);
 
 
 }
 
-void MagnifyingGlass::InitProperty()
+void MagnifyingGlass::InitProperty()//初始化属性
 {
     this->setWindowFlags(Qt::FramelessWindowHint);
     setAutoFillBackground(true);
@@ -67,7 +67,7 @@ void MagnifyingGlass::InitProperty()
     //SetLightState("CloseLight");
 
     connect(m_pButtonTool, &ButtonTool::clicked, this, [=](ButtonTool::STATE state){
-        switch (state) {
+        switch (state) {             //根据选择的按钮更改属性
             case ButtonTool::STATE::CUT: {
                 m_bCut = !m_bCut;
                 update();
@@ -107,7 +107,7 @@ void MagnifyingGlass::InitProperty()
     m_bInit =true;
 }
 
-bool MagnifyingGlass::ZoomIsInArea(QPoint pos)
+bool MagnifyingGlass::ZoomIsInArea(QPoint pos)  //是否进行缩放
 {
     if(pos.x() > m_pZoom->x()
             && pos.x() < m_pZoom->x() + m_pZoom->width()
@@ -121,13 +121,13 @@ bool MagnifyingGlass::ZoomIsInArea(QPoint pos)
 
 void MagnifyingGlass::mousePressEvent(QMouseEvent *event)
 {
-    if(this->ZoomIsInArea(event->pos()))
+    if(this->ZoomIsInArea(event->pos())) //点在区域外-缩放
     {
         m_pScreen->SetState(ProcessObject::STATE::ZOOM);
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeFDiagCursor);
     }
-    else if(m_pScreen->IsInArea(event->pos()))
+    else if(m_pScreen->IsInArea(event->pos()))//点在区域内-移动
     {
         m_pScreen->SetState(ProcessObject::STATE::MOVE);
         m_pZoom->setVisible(false);
@@ -138,7 +138,7 @@ void MagnifyingGlass::mousePressEvent(QMouseEvent *event)
     m_qMovePos = event->pos();
 }
 
-void MagnifyingGlass::mouseMoveEvent(QMouseEvent *event)
+void MagnifyingGlass::mouseMoveEvent(QMouseEvent *event)//随鼠标移动选择缩放或移动
 {
     if(m_pScreen->GetState() == ProcessObject::STATE::MOVE)
     {
@@ -158,7 +158,7 @@ void MagnifyingGlass::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 
-void MagnifyingGlass::mouseReleaseEvent(QMouseEvent *event)
+void MagnifyingGlass::mouseReleaseEvent(QMouseEvent *event)//鼠标释放，初始化各部件属性
 {
     Q_UNUSED(event)
     if(m_pScreen->GetState() == ProcessObject::STATE::MOVE)
@@ -176,7 +176,7 @@ void MagnifyingGlass::mouseReleaseEvent(QMouseEvent *event)
     this->setCursor(Qt::ArrowCursor);
 }
 
-void MagnifyingGlass::paintEvent(QPaintEvent *event)
+void MagnifyingGlass::paintEvent(QPaintEvent *event)//用给定的颜色填充选择的区域
 {
     Q_UNUSED(event)
     QPainter painter(this);
@@ -198,9 +198,9 @@ void MagnifyingGlass::paintEvent(QPaintEvent *event)
 
 
 
-    if(w != 0 && h != 0)
+    if(w != 0 && h != 0)    //确认选中区域
     {
-        if(m_bCut)
+        if(m_bCut) //切换为圆形区域
         {
             int side = qMin(w, h);
             // x,y 的坐标换算比例
@@ -227,7 +227,7 @@ void MagnifyingGlass::paintEvent(QPaintEvent *event)
             m_pZoom->move(x1-m_pZoom->width()/2, y1-m_pZoom->height()/2);
             //m_pZoom->show();
 
-        } else {
+        } else {   //切换为矩形区域
             // x,y 的坐标换算比例
             float scale_x = float(x)/float(m_pScreen->GetMaxParentWidget()-w);
             float scale_y = float(y)/float(m_pScreen->GetMaxParentHeight()-h);
@@ -264,10 +264,10 @@ void MagnifyingGlass::paintEvent(QPaintEvent *event)
     }
 }
 
-void MagnifyingGlass::showEvent(QShowEvent *event)
+void MagnifyingGlass::showEvent(QShowEvent *event) //显示缩放区域
 {
     Q_UNUSED(event)
-    if(m_bInit)
+    if(m_bInit)//若初始化成功,处理屏幕对象并显示
     {
         int wide = m_pScreen->GetMaxParentHeight()/3;
         int x = (m_pScreen->GetMaxParentWidget() - wide)/2;
@@ -275,7 +275,7 @@ void MagnifyingGlass::showEvent(QShowEvent *event)
         m_pScreen->SetStart(QPoint(x,y));
         m_pScreen->SetGeometry(x, y, wide, wide);
 
-        // QT5.6 获取主屏幕大小 - 全屏大小
+        //  获取主屏幕大小 - 全屏大小
         QScreen *screen = QApplication::primaryScreen();
         *m_pFullScreen = screen->grabWindow(
                                            QApplication::desktop()->winId(),
