@@ -1,4 +1,5 @@
-#include "screenshot.h"
+//屏幕截图
+#include "screenshot.h"         //插入头文件
 #include "buttontool.h"
 #include <QMouseEvent>
 #include <QPaintEvent>
@@ -13,7 +14,7 @@
 
 #include "processobject.h"
 
-ScreenShot::ScreenShot(QWidget *parent)
+ScreenShot::ScreenShot(QWidget *parent)              //屏幕布局
     : ImageToolBase(parent)
 {
     InitUi();
@@ -21,7 +22,7 @@ ScreenShot::ScreenShot(QWidget *parent)
     InitProperty();
 }
 
-ScreenShot::~ScreenShot()
+ScreenShot::~ScreenShot()                    //析构函数
 {
 
 }
@@ -35,18 +36,25 @@ void ScreenShot::InitUi()
 
     m_pZoom_Left_Top = new QWidget(this);
     m_pZoom_Left_Top->setObjectName("Zoom");
+
     m_pZoom_Top = new QWidget(this);
     m_pZoom_Top->setObjectName("Zoom");
+
     m_pZoom_Right_Top = new QWidget(this);
     m_pZoom_Right_Top->setObjectName("Zoom");
+
     m_pZoom_Left = new QWidget(this);
     m_pZoom_Left->setObjectName("Zoom");
+
     m_pZoom_Right = new QWidget(this);
     m_pZoom_Right->setObjectName("Zoom");
+
     m_pZoom_Left_Bottom = new QWidget(this);
     m_pZoom_Left_Bottom->setObjectName("Zoom");
+
     m_pZoom_Right_Bottom = new QWidget(this);
     m_pZoom_Right_Bottom->setObjectName("Zoom");
+
     m_pZoom_Bottom = new QWidget(this);
     m_pZoom_Bottom->setObjectName("Zoom");
 
@@ -69,7 +77,7 @@ void ScreenShot::InitProperty()
     //获取程序当前运行目录
     //QString path = QCoreApplication::applicationDirPath();
 
-    QFile resourceqss(":/ImageTools/qss/ScreenShot.qss");//该路径要改~~~~~~~~~~
+    QFile resourceqss(":/ImageTools/qss/ScreenShot.qss");   //读取这个文件
     resourceqss.open(QFile::ReadOnly);
     this->setStyleSheet(resourceqss.readAll());
     resourceqss.close();
@@ -106,7 +114,7 @@ void ScreenShot::InitProperty()
     m_bInit =true;
 }
 
-void ScreenShot::SetZoomVisible(bool visible)
+void ScreenShot::SetZoomVisible(bool visible)      //使widget是否可见
 {
     m_pZoom_Top->setVisible(visible);
     m_pZoom_Bottom->setVisible(visible);
@@ -157,7 +165,7 @@ bool ScreenShot::ZoomIsInArea(QWidget *Zoom, QPoint pos)
     return false;
 }
 
-void ScreenShot::Save()
+void ScreenShot::Save()            //保存图片的操作
 {
     QString fileName = QFileDialog::getSaveFileName(this, "保存图片", STRDATETIME + QString(".png"), "PNG (*.png);;JPEG (*.jpg *jpeg);;BMP (*.bmp)");
     if(!fileName.isEmpty())
@@ -174,7 +182,7 @@ void ScreenShot::Save()
     }
 }
 
-void ScreenShot::mousePressEvent(QMouseEvent *event)
+void ScreenShot::mousePressEvent(QMouseEvent *event)              //拖拽控件函数
 {
 
     if(ZoomIsInArea(m_pZoom_Left_Top, event->pos()))
@@ -184,56 +192,64 @@ void ScreenShot::mousePressEvent(QMouseEvent *event)
         m_pScreen->SetStart(m_pScreen->GetRightBottomPos());
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeFDiagCursor);
-    } else if(ZoomIsInArea(m_pZoom_Right_Top, event->pos()))
+    }
+    else if(ZoomIsInArea(m_pZoom_Right_Top, event->pos()))
     {
         // 右上角拖拽
         m_pScreen->SetState(ProcessObject::STATE::ZOOM);
         m_pScreen->SetStart(QPoint(m_pScreen->GetLeftTopPos().x(), m_pScreen->GetRightBottomPos().y()));
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeBDiagCursor);
-    } else if(ZoomIsInArea(m_pZoom_Left_Bottom, event->pos()))
+    }
+    else if(ZoomIsInArea(m_pZoom_Left_Bottom, event->pos()))
     {
         // 左下角拖拽
         m_pScreen->SetState(ProcessObject::STATE::ZOOM);
         m_pScreen->SetStart(QPoint(m_pScreen->GetRightBottomPos().x(), m_pScreen->GetLeftTopPos().y()));
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeBDiagCursor);
-    } else if(ZoomIsInArea(m_pZoom_Right_Bottom, event->pos()))
+    }
+    else if(ZoomIsInArea(m_pZoom_Right_Bottom, event->pos()))
     {
         // 右下角拖拽
         m_pScreen->SetState(ProcessObject::STATE::ZOOM);
         m_pScreen->SetStart(QPoint(m_pScreen->GetLeftTopPos().x(), m_pScreen->GetLeftTopPos().y()));
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeFDiagCursor);
-    } else if(ZoomIsInArea(m_pZoom_Top, event->pos()))
+    }
+    else if(ZoomIsInArea(m_pZoom_Top, event->pos()))
     {
         // 上边拖拽
         m_pScreen->SetState(ProcessObject::STATE::TOP_ZOOM);
         m_pScreen->SetStart(m_pScreen->GetRightBottomPos());
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeVerCursor);
-    } else if(ZoomIsInArea(m_pZoom_Bottom, event->pos()))
+    }
+    else if(ZoomIsInArea(m_pZoom_Bottom, event->pos()))
     {
         //下边拖拽
         m_pScreen->SetState(ProcessObject::STATE::BOTTOM_ZOOM);
         m_pScreen->SetStart(m_pScreen->GetLeftTopPos());
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeVerCursor);
-    } else if(ZoomIsInArea(m_pZoom_Left, event->pos()))
+    }
+    else if(ZoomIsInArea(m_pZoom_Left, event->pos()))
     {
         // 左边拖拽
         m_pScreen->SetState(ProcessObject::STATE::LEFT_ZOOM);
         m_pScreen->SetStart(m_pScreen->GetRightBottomPos());
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeHorCursor);
-    } else if(ZoomIsInArea(m_pZoom_Right, event->pos()))
+    }
+    else if(ZoomIsInArea(m_pZoom_Right, event->pos()))
     {
         // 右边拖拽
         m_pScreen->SetState(ProcessObject::STATE::RIGHT_ZOOM);
         m_pScreen->SetStart(m_pScreen->GetLeftTopPos());
         m_pButtonTool->setVisible(false);
         this->setCursor(Qt::SizeHorCursor);
-    } else if(event->button() == Qt::LeftButton)
+    }
+    else if(event->button() == Qt::LeftButton)
     {
         m_qMovePos = event->pos();
         if(m_pScreen->GetStart() == QPoint(-1, -1))
@@ -242,19 +258,22 @@ void ScreenShot::mousePressEvent(QMouseEvent *event)
             m_pScreen->SetStart(m_qMovePos);
             m_pButtonTool->setVisible(false);
 
-        } else if(m_pScreen->IsInArea(event->pos()))
+        }
+    else if(m_pScreen->IsInArea(event->pos()))
         {
             m_pScreen->SetState(ProcessObject::STATE::MOVE);
             m_pButtonTool->setVisible(false);
             this->setCursor(Qt::SizeAllCursor);
         }
-    } else if(event->button() == Qt::RightButton)
+    }
+    else if(event->button() == Qt::RightButton)
     {
         if(m_pScreen->GetStart() == QPoint(-1, -1))
         {
             this->close();
             emit clicked(STATE::CLOSE);
-        } else {
+        }
+        else {
             m_pButtonTool->setVisible(false);
             m_pScreen->SetStart(QPoint(-1, -1));
             m_pScreen->SetGeometry(-1, -1, 0, 0);
@@ -265,7 +284,7 @@ void ScreenShot::mousePressEvent(QMouseEvent *event)
 
 }
 
-void ScreenShot::mouseMoveEvent(QMouseEvent *event)
+void ScreenShot::mouseMoveEvent(QMouseEvent *event)    //应用鼠标决定裁剪大小
 {
     if(m_pScreen->GetState() == ProcessObject::STATE::MOVE)
     {
@@ -291,7 +310,7 @@ void ScreenShot::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 
-void ScreenShot::mouseReleaseEvent(QMouseEvent *event)
+void ScreenShot::mouseReleaseEvent(QMouseEvent *event)          //确定裁剪内容
 {
     Q_UNUSED(event)
     if(m_pScreen->GetState() == ProcessObject::STATE::MOVE)
@@ -309,7 +328,7 @@ void ScreenShot::mouseReleaseEvent(QMouseEvent *event)
     this->setCursor(Qt::ArrowCursor);
 }
 
-void ScreenShot::paintEvent(QPaintEvent *event)
+void ScreenShot::paintEvent(QPaintEvent *event)            //裁剪
 {
     Q_UNUSED(event)
     QPainter painter(this);
@@ -370,13 +389,12 @@ void ScreenShot::paintEvent(QPaintEvent *event)
     }
 }
 
-void ScreenShot::showEvent(QShowEvent *event)
+void ScreenShot::showEvent(QShowEvent *event)           //对裁剪后的内容进行处理
 {
     Q_UNUSED(event)
     if(m_bInit)
     {
-
-        // QT5.6 获取主屏幕大小 - 全屏大小
+        //获取主屏幕大小 - 全屏大小
         QScreen *screen = QApplication::primaryScreen();
         *m_pFullScreen = screen->grabWindow(
                                            QApplication::desktop()->winId(),
@@ -394,4 +412,3 @@ void ScreenShot::showEvent(QShowEvent *event)
 
     }
 }
-
