@@ -274,3 +274,8 @@ void Widget::on_spotlight_btn_2_clicked()
 
        delay->start(300);
 }
+void Widget::on_pushButton_clicked()
+{
+            static int i=0;
+            ui->change->setCurrentIndex(++i%4);
+}
