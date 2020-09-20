@@ -36,11 +36,14 @@ public:
 private slots:
 
 
-    void on_screenshot_btn_2_clicked();
+    void on_screenshot_btn_clicked();    //截图
 
-    void on_magnify_btn_2_clicked();
+    void on_magnify_btn_clicked();       //放大灯
 
-    void on_spotlight_btn_2_clicked();
+    void on_spotlight_btn_clicked();     //聚光灯
+
+    void on_pushButton_clicked();      //切换按件
+
 
   private:
     //下面是补充的番茄钟设计
